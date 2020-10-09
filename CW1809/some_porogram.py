@@ -1,3 +1,4 @@
+# Зайти на http://data.kzn.ru/dinamic_datasets/bus
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
