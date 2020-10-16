@@ -43,6 +43,19 @@ def find_optimal_k(data, iterations=11):
         wcss.append(calculate_inertia(data, centers, clusters))
     plt.plot(range(1, iterations), wcss)
     plt.show()
+    return wcss
+
+
+def get_optimal_k_automatically(wcss):
+    def _d(k):
+        return np.abs(wcss[k] - wcss[k + 1]) / np.abs(wcss[k - 1] - wcss[k])
+    d = _d(1)
+    result = 1
+    for i in range(2, len(wcss) - 1):
+        if _d(i) < d:
+            d = _d(i)
+            result = i
+    return result
 
 
 def calculate_inertia(data, centers, clusters):
@@ -129,9 +142,12 @@ def plot_k_means(clusters, centers_new, data):
 
 
 if __name__ == '__main__':
-    points = get_random_data()
-    # points = generate_random_data()
-    find_optimal_k(points)
-    clusters_result, centers_result = k_means_algorithm(data=points, num_of_clusters=int(input('Input number of '
-                                                                                               'clusters: ')))
+    # points = get_random_data()
+    points = generate_random_data()
+    results = find_optimal_k(points)
+    print(get_optimal_k_automatically(results))
+    # clusters_result, centers_result = \
+    #     k_means_algorithm(data=points, num_of_clusters=int(input('Input number of clusters: ')))
+    clusters_result, centers_result = \
+        k_means_algorithm(data=points, num_of_clusters=get_optimal_k_automatically(results))
     plot_k_means(clusters_result, centers_result, points)
